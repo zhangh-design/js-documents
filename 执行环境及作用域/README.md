@@ -244,16 +244,32 @@ console.info(obj.__proto__.getName());// 小孔
 console.info(P === Person);// true
 ```
 
-4. **prototype、__proto__**
+4. **`__proto__`属性**
+
+1. `__proto__`和`constructor`属性是对象所独有的。
+2. `prototype`属性是函数所独有的。
+
+注意点：但是由于`JS`中函数也是一种对象，所以函数也拥有`__proto__`和`constructor`属性，这点是致使我们产生困惑的很大原因之一，我们看下图片：
+
+![image](https://raw.githubusercontent.com/zhangh-design/js-documents/master/%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83%E5%8F%8A%E4%BD%9C%E7%94%A8%E5%9F%9F/4.png)
+
+```
+console.info(Person.constructor); //ƒ () { [native code] }
+console.info(Person.__proto__);   //ƒ () { [native code] }
+```
+
+```
+console.info(obj.__proto__);
+console.info(Person.prototype);
+```
+![image](https://raw.githubusercontent.com/zhangh-design/js-documents/master/%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83%E5%8F%8A%E4%BD%9C%E7%94%A8%E5%9F%9F/5.png)
+
+注意点：
+
+这里我们仅留下 `__proto__` 属性，它是对象所独有的，可以看到`__proto__`属性都是由一个对象指向一个对象，即指向它们的原型对象（也可以理解为父对象），那么这个属性的作用是什么呢？它的作用就是当访问一个对象的属性时，如果该对象内部不存在这个属性，那么就会去它的`__proto__`属性所指向的那个对象（可以理解为父对象）里找，如果父对象也不存在这个属性，则继续往父对象的`__proto__`属性所指向的那个对象（可以理解为爷爷对象）里找，如果还没找到，则继续往上找。
 
 
-
-
-
-
-
-
-
+![image](https://raw.githubusercontent.com/zhangh-design/js-documents/master/%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83%E5%8F%8A%E4%BD%9C%E7%94%A8%E5%9F%9F/6.png)
 
 
 
