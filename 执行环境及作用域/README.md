@@ -246,10 +246,12 @@ console.info(P === Person);// true
 
 4. **`__proto__`属性**
 
-1. `__proto__`和`constructor`属性是对象所独有的。
-2. `prototype`属性是函数所独有的。
+`__proto__`属性其实是指向了函数的父对象，`prototype`属性其实是指向了函数本身的原型实例。
 
 注意点：但是由于`JS`中函数也是一种对象，所以函数也拥有`__proto__`和`constructor`属性，这点是致使我们产生困惑的很大原因之一，我们看下图片：
+
+1. `__proto__`和`constructor`属性是对象所独有的。
+2. `prototype`属性是函数所独有的。
 
 ![image](https://raw.githubusercontent.com/zhangh-design/js-documents/master/%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83%E5%8F%8A%E4%BD%9C%E7%94%A8%E5%9F%9F/4.png)
 
@@ -271,7 +273,7 @@ console.info(Person.prototype);
 
 ![image](https://raw.githubusercontent.com/zhangh-design/js-documents/master/%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83%E5%8F%8A%E4%BD%9C%E7%94%A8%E5%9F%9F/6.png)
 
-
+![image](https://raw.githubusercontent.com/zhangh-design/js-documents/master/%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83%E5%8F%8A%E4%BD%9C%E7%94%A8%E5%9F%9F/7.png)
 
 
 
