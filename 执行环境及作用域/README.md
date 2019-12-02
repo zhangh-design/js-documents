@@ -275,10 +275,33 @@ console.info(Person.prototype);
 
 ![image](https://raw.githubusercontent.com/zhangh-design/js-documents/master/%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83%E5%8F%8A%E4%BD%9C%E7%94%A8%E5%9F%9F/7.png)
 
+> 示例分析1：
 
+> 使用下面的方法会将 `method` 方法挂载到任意一个创建的函数中
 
+```
+Function.prototype.method = function (name, fn) {
+	if(!this.prototype[name]){
+		// this指向构造函数本身
+		this.prototype[name] = fn
+	}
+	return this
+}
+```
 
+> this.constructor返回[Native code]形式的调用执行：
 
-
+```
+Promise.prototype.finally = function (callback){
+	// P指向构造函数本身
+	// 这里如果想要操作 resolve 函数需要使用构造函数
+	// 这里需要注意Premise.constructor构造函数返回的是 [Native code]所以才能使用P.resolve ，resolve是底层[Native code]提供的接口和一般定义的函数不同
+	let P = this.constructor
+	return this.then(
+		value => P.resolve(callback()).then(() => value),
+		reason => P.resolve(callback()).then(() => {throw reason})
+	)
+}
+```
 
 
