@@ -296,6 +296,7 @@ Function.prototype.method = function (name, fn) {
 
 2：那正常我们自己创建的函数例如：`var b = function(){var name='小米';}` 那它的构造函数输出`（console.info(new b().constructor)）`应该是函数本身 `ƒ (){var name='小米';}`。
 
+![image](https://raw.githubusercontent.com/zhangh-design/js-documents/master/%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83%E5%8F%8A%E4%BD%9C%E7%94%A8%E5%9F%9F/8.png)
 
 ```
 Promise.prototype.finally = function (callback){
