@@ -290,6 +290,10 @@ Function.prototype.method = function (name, fn) {
 ```
 
 > this.constructor返回[Native code]形式的调用执行：
+注意：
+1：类似`Promise`这些js底层提供的函数它的构造函数返回是 `ƒ Promise() { [native code] }`，`native code`与正常的方法执行不同的是，`native code`是计算机二进制，无法通过`()`来直接执行，只有通过抛出的接口来调用。
+2：那正常我们自己创建的函数例如：`var b = function(){var name='小米';}` 那它的构造函数输出`（console.info(new b().constructor)）`应该是函数本身 `ƒ (){var name='小米';}`。
+
 
 ```
 Promise.prototype.finally = function (callback){
