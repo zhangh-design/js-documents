@@ -128,6 +128,18 @@ console.info(obj.__proto__);
 ```
 ![image](https://raw.githubusercontent.com/zhangh-design/js-documents/master/%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83%E5%8F%8A%E4%BD%9C%E7%94%A8%E5%9F%9F/1.png)
 
+```
+Person.prototype.constructor
+构造函数原型的构造函数还是 Person 函数本身
+输出：
+ƒ Person(name, age){
+    this.name = name;
+    this.age = age;
+    this.getAddress = function(){
+        return '西湖区西斗门路3号';
+    }
+}
+```
 
 > 示例二：
 
