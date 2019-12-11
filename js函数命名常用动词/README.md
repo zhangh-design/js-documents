@@ -1,5 +1,7 @@
 ## js函数命名常用动词
 
+> Google JavaScript样式指南 https://google.github.io/styleguide/jsguide.html#file-name
+
 get 获取/set 设置,        
 
 add 增加/remove 删除
