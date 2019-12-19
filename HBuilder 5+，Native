@@ -1,0 +1,734 @@
+
+
+
+HBuilder  (Native.js  Native API)
+HBuilder里进行
+
+APIColud
+
+AndroidManifest.xml文件添加:
+<!-- 开机自启动所需用的权限 -->
+<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+<receiver android:name="com.demo.AutoBootReceiver">
+<intent-filter>
+<action android:name="android.intent.action.BOOT_COMPLETED"></action>
+<category android:name="android.intent.category.DEFAULT"></category>
+</intent-filter>
+</receiver>
+
+原生Android 系统一定可以，但第三方的一些系统不一定能成功，像小米这些。
+可能启动方式不一样，有些是快速启动，不是完全的关闭系统，就会造成开机没有广播事件，那就监听不了开机了。
+而且有些第三方的系统由于安全的问题，默认禁止了后台启动app的权限
+
+
+HTML5+ 基座扩展采用三层结构，js层、PluginBridge层和Native层。
+	|
+	|--- js层： 在Webview页面调用，触发Native层代码，获取执行结果。
+	|
+	|--- PluginBridge层：将js层请求进行处理，触发Native层扩展插件代码。
+	|
+	|--- Native层：插件扩展的平台原生代码，负责执行业务逻辑并执行结果返回到请求页面。
+	
+	
+package io.dcloud;  
+
+// 定义类NjsHello  
+public class NjsHello {  
+    // 静态常量  NJS “.”操作符调用
+    public static final int CTYPE = 1;  
+    // 静态变量  NJS ClassObject(类对象).plusGetAttribute/.plusSetAttribute
+    public static int count;  
+    // 成员常量  对象的常量属性会转换NJS实例对象的属性，可通过实例对象的“.”操作符访问
+    public final String BIRTHDAY = "2013-01-13";  
+    // 成员变量  对象的非常量属性则必须通过NJS 实例对象 的plusGetAttribute、plusSetAttribute方法操作。
+    String name; //定义属性name  
+    NjsHelloEvent observer;  
+    public void updateName( String newname ) { //定义方法updateName  
+        name = newname;  
+    }  
+	//设置监听对象
+    public void setEventObserver( NjsHelloEvent newobserver ) {
+        observer = newobserver;
+    }  
+	//在Java中对象的方法会转换成NJS实例对象的方法，可通过实例对象的“.”操作符调用
+    public void test() { //定义方法test  
+        System.out.printf( "My name is: %s", name );  
+        observer.onEventInvoked( name );  
+    }  
+	//NJS “.”操作符调用
+    public static void testCount() {  
+        System.out.printf( "Static count is:%d", count );  
+    }  
+    static{  // 初始化类的静态变量  
+        NjsHello.count = 0;  
+    }
+}  
+
+package io.dcloud;  
+
+// 定义接口NjsHelloEvent  
+public interface NjsHelloEvent {  
+    public void onEventInvoked( String name );  
+}
+
+
+方法：
+importClass: 导入java类对象
+
+newObject：	 创建实例对象
+
+getAttribute:获取对象(类对象/实例对象)的属性值
+
+setAttribute:设置对象(类对象/实例对象)的属性值
+
+invoke:		 调用对象(类对象/实例对象)的方法
+
+implements： 实现Interface的方法
+
+runtimeMainActivity: 获取应用主Activity实例对象
+
+currentWebview：获取当前Webview窗口对象的native层实例对象
+	
+
+对象：
+ClassObject：java类对象
+	plusGetAttribute	获取Java类对象的静态属性
+	plusSetAttribute	设置Java类对象的静态属性
+	
+	( 
+		调用plus.android.importClass()方法导入类并返回ClassObject类对象，通过该类对象，可以创建类的实例对象。
+		在Java中类的静态方法会转换成NJS类对象的方法，可通过类对象的“.”操作符调用；
+		类的静态常量会转换为NJS类对象的属性，可通过类对象的“.”操作符访问；
+		类的静态属性则需通过NJS类对象的plusGetAttribute、plusSetAttribute方法操作。
+	)
+
+InstanceObject：java实例对象
+	plusGetAttribute  获取java实例对象的属性
+	plusSetAttribute  设置java实例对象的属性
+
+
+InstanceObject	
+	NJS中实例对象与Java中的对象对应，调用plus.android.importClass()方法导入类后，通过new操作符可创建该类的实例对象。
+	或直接调用plus.android.newObject方法创建类的实例对象。
+	也可通过调用Native API返回实例对象。
+	
+权限：
+	5+功能模块（permissions）
+	{
+	// ...
+	"permissions":{
+		// ...
+		"Invocation": {
+			"description": "Native.js"
+		}
+	}
+}
+	
+
+Android原生应用的主Activity对象
+	plus.android.runtimeMainActivity()
+
+文件路径转换 (前端 'image/1.png'-> 安卓 )
+	plus.io.convertLocalFileSystemURL("image/1.png")
+
+
+
+获取实例对象
+	有两种方式获取类的实例对象  ---|
+								   | --1. 一种是调用Native API返回值获取
+								   |
+								   | --2. 通过new操作符来创建导入的类对象的实例
+
+高级API
+
+
+
+开始写NJS
+	1. 导入要使用到的类；
+	2. 创建类的实例对象（或者调用类的静态方法创建）；							   
+	3. 调用实例对象的方法；							   
+								   
+								   
+								   
+implements： 实现Interface的方法							   
+	// 导入测试类NjsHello  
+	var NjsHello = plus.android.importClass("io.dcloud.NjsHello");  
+	// 实现接口“NjsHelloEvent”对象
+	var hevent = plus.android.implements( "io.dcloud.NjsHelloEvent", {							   
+		"onEventInvoked":function( name ){							
+			console.log( "Invoked Object’s name: "+name ); // 输出“Invoked Object’s name: Tester”						
+		}
+	} );
+	
+	// 创建对象的实例  
+	var hello = new NjsHello();
+	// 调用updateName方法
+	hello.updateName( "Tester" );
+	// 设置监听对象
+	hello.setEventObserver( hevent );
+	// 调用test方法，触发代理事件  
+	hello.test(); // 触发上面定义的匿名函数运行  
+	// ...  
+   
+   
+   
+   
+在现有的项目中集成HTML5+SDK
+	|
+	|---Widget插件集成方式 ( 如果想在原生应用中启动一个完整的HTML5+ App，应该使用widget方式； )
+	|
+	|---Webview集成方式 ( 如果只是某个页面的webview想换成HTML5+ runtime的webview，应该使用webview方式。 )
+   
+   
+   
+io.dcloud.util.JSUtil   
+    JSUtil.execCallback()
+   转换JS层的返回值，也用于异步接口中回调函数的参数。
+   
+
+
+Manifest.json文档说明manifest配置
+	Manifest.json文件是5+移动App的配置文件，用于指定应用的显示名称、图标、应用入口文件地址及需要使用的设备权限等信息。
+
+
+
+package com.example.H5PlusPlugin;
+public class PGPlugintest extends StandardFeature{
+	
+	/**
+     * 这个方法在活动由不可见变为可见的时候调用
+     */
+    @Override
+    public void onStart(Context context, Bundle bundle, String[] strings) {
+        super.onStart(context, bundle, strings);
+        /**
+         * 如果需要在应用启动时进行初始化，可以继承这个方法，并在properties.xml文件的service节点添加扩展插件的注册即可触发onStart方法
+         * */
+        Log.d("PGPlugintest","如果需要在应用启动时进行初始化，可以继承这个方法，并在properties.xml文件的service节点添加扩展插件的注册即可触发onStart方法");
+    }
+}
+
+data/dcloud_properties.xml
+	<properties>
+		<features>
+			<feature name="plugintest" value="com.example.H5PlusPlugin.PGPlugintest"/>
+		</features>
+		
+		<services>
+			<!-- PGPlugintest.java 需要注册services 才能触发onStart生命周期函数-->
+			<service name="plugintest" value="com.example.H5PlusPlugin.PGPlugintest"/>
+		</services>
+	<properties>
+
+
+
+注意H5+SDK的Main Activity为PandoraEntry（见AndroidMainfest.xml）	
+	public class BootBroadcastReceiver extends BroadcastReceiver {  
+
+    static final String action_boot="android.intent.action.BOOT_COMPLETED";  
+
+    @Override  
+    public void onReceive(Context context, Intent intent) {  
+
+        if (intent.getAction().equals(action_boot)){  
+
+            // 注意H5+SDK的Main Activity为PandoraEntry（见AndroidMainfest.xml）  
+            Intent bootMainIntent = new Intent(context, PandoraEntry.class);  
+
+            // 这里必须为FLAG_ACTIVITY_NEW_TASK  
+            bootMainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
+
+            context.startActivity(bootMainIntent);  
+        }  
+
+    }  
+}  
+
+	
+Native.js 打开系统Toast
+	var Toast = plus.android.importClass("android.widget.Toast");
+    var main = plus.android.runtimeMainActivity();
+    Toast.makeText(main,"打开新的活动",Toast.LENGTH_LONG).show();
+	
+	
+Native.js 打开系统相册
+	<div class="button" onclick="pluginShowActivity()">打开新的Activity</div>
+	//此处需要注意onclick的处理函数名称不能是'open()'
+	function pluginShowActivity(){
+		var main = plus.android.runtimeMainActivity();
+        var Intent = plus.android.importClass("android.content.Intent");
+		var intent = new Intent(main.getIntent());
+		intent.setClassName(main, "io.dcloud.imagepick.CustomGalleryActivity");
+		main.startActivity(intent);
+    }
+	
+	AndroidManifest.xml
+		<activity
+            android:name="io.dcloud.imagepick.CustomGalleryActivity"
+            android:launchMode="singleTask"
+            ></activity>
+	
+	//启动模式需要设置为singleTask，否则在android studio停止运行后再次打开apk无法调出系统相册
+	
+Native.js 打开原生Activity活动
+	<div class="button" onclick="pluginShowActivity()">打开新的Activity</div>
+	//此处需要注意onclick的处理函数名称不能是'open()'
+	function pluginShowActivity(){
+		var main = plus.android.runtimeMainActivity();
+        var Intent = plus.android.importClass("android.content.Intent");
+		var intent = new Intent(main.getIntent());
+		intent.setClassName(main, "com.example.administrator.helloworld.Main2Activity");
+		intent.putExtra("extra_data", 'Hello!');
+		//intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); android:launchMode="singleTask"或者intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		main.startActivity(intent);
+		
+		//main.startActivityForResult(intent);
+		/**
+		调用返回通知上一个活动
+		main.onActivityResult = function(requestCode, resultCode, data) {
+                if('100' == requestCode){
+                    plus.android.importClass(data);
+                    var bundle=data.getExtras();
+                    plus.android.importClass(bundle);
+                    var ewm_no = bundle.getString("data_return");
+                    alert(ewm_no);
+                }
+            }
+        main.startActivityForResult(intent,100);
+		**/
+		
+    }
+	
+	public class Main2Activity extends Activity {
+
+		@Override
+		protected void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_main2);
+
+			Button button = (Button) findViewById(R.id.button);
+			button.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Toast.makeText(Main2Activity.this, "我被点击了...",Toast.LENGTH_LONG).show();
+					
+					/*
+					使用main.startActivityForResult(intent);的方式打开活动，调用返回通知上一个活动
+					intent.putExtra("data_return", "Hello FirstActivity");
+					setResult( RESULT_OK, intent);
+					finish();
+					*/
+				}
+			});
+		}
+	}
+	
+	AndroidManifest.xml
+		<activity
+            android:name="com.example.administrator.helloworld.Main2Activity"
+            android:launchMode="singleTask"
+            ></activity>
+	
+	//启动模式需要设置为singleTask，否则在android studio停止运行后再次打开apk无法调出原生Activity
+
+Native.js 	显示Android系统提示框
+	1：
+	var dlg = plus.android.newObject("android.app.AlertDialog$Builder",plus.android.runtimeMainActivity());
+　　plus.android.invoke(dlg,"setTitle","自定义标题");
+　　plus.android.invoke(dlg,"setMessage","使用NJS的原生弹出框，可自定义弹出框的标题、按钮");
+　　plus.android.invoke(dlg,"setPositiveButton","确定(或者其他字符)",null);
+　　plus.android.invoke(dlg,"show");
+	2：
+	// 导入AlertDialog类  
+    var AlertDialog = plus.android.importClass("android.app.AlertDialog");  
+    // 创建提示框构造对象，构造函数需要提供程序全局环境对象，通过plus.android.runtimeMainActivity()方法获取  
+    var dlg = new AlertDialog.Builder(plus.android.runtimeMainActivity());  
+    // 设置提示框标题  
+    dlg.setTitle("自定义标题");  
+    // 设置提示框内容  
+    dlg.setMessage("使用NJS的原生弹出框，可自定义弹出框的标题、按钮");  
+    // 设置提示框按钮  
+    dlg.setPositiveButton("确定(或者其他字符)",null);  
+    // 显示提示框  
+    dlg.show();
+	
+   
+   
+Native.js 打开摄像头拍照   
+	// 获取设备默认的摄像头对象
+	var cmr = plus.camera.getCamera();
+	cmr.captureImage(function(p){
+		plus.gallery.save( p, function () {
+			alert( "保存图片到相册成功" );
+			//显示拍照的图片
+			plus.io.resolveLocalFileSystemURL(p, function(entry) {
+				var src = entry.toLocalURL();
+				document.getElementById('cameraPhoto_img_id').src=src;
+			}, function(e) {
+
+			});
+			
+		} );
+		alert( "Capture image success: " + p );
+	}, function(e){
+		alert( "Capture image failed: " + e.message );
+	}, {filename:'_doc/camera/',index:1});	//此处并未保存图片至_doc/camera目录，照片在相册目录，后期在优化
+   
+   <img id="cameraPhoto_img_id" width="200px" height="200px"/>
+   
+   权限：
+	uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+   
+   
+android 发送自定义广播   
+	//广播注册
+   <receiver
+		android:name="com.example.MyReceiver"
+		android:enabled="true"
+		android:exported="true">
+		<intent-filter>
+			<action android:name="bbbbbbb"></action>
+		</intent-filter>
+	</receiver>
+   
+   //onCreate
+   Button bt = (Button) findViewById(R.id.button);
+        bt.setOnClickListener(
+			new View. OnClickListener() {
+				@Override
+				public void onClick( View v) {
+					//Intent intent = new Intent(MainActivity.this, FirstActivity.class);
+					//startActivity(intent);
+					Intent it = new Intent("bbbbbbb");
+					it.setComponent(new ComponentName(getPackageName(),"com.example.MyReceiver"));	//这里是关键
+					sendBroadcast(it);
+				}
+			});
+	
+	//广播类	
+	package com.example;
+	public class MyReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Toast.makeText(context,"接收到自定义的广播",Toast.LENGTH_SHORT).show();
+		}
+	}
+   
+Native.js发送静态注册的自定义广播
+   function pluginShowSendBroadcast(){
+		var Intent = plus.android.importClass("android.content.Intent");
+		var ComponentName = plus.android.importClass("android.content.ComponentName");
+		var intent = new Intent("net.deniro.android.MY_BROADCAST");
+		intent.setComponent(new ComponentName("com.example.administrator.helloworld","com.example.BroadcastReceiver.BootCompltetReceiver"));
+
+		var main = plus.android.runtimeMainActivity();
+		main.sendBroadcast(intent);
+	}
+   
+   <receiver
+		android:name="com.example.BroadcastReceiver.BootCompltetReceiver"
+		android:enabled="true"
+		android:exported="true">
+		<intent-filter>
+			<action android:name="net.deniro.android.MY_BROADCAST" />
+		</intent-filter>
+	</receiver>
+   
+	public class BootCompltetReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Toast.makeText( context, "这是自定义的广播!", Toast.LENGTH_LONG).show();
+		}
+	}
+	
+	
+Native.js动态注册自定义广播   原生Activity调用js端注册的广播
+	function onListenMyBroadcast(){
+		var main = plus.android.runtimeMainActivity();
+		var myBroad = plus.android.implements( 'io.dcloud.feature.internal.reflect.BroadcastReceiver', {
+			onReceive: function(context, intent){
+				var Toast = plus.android.importClass("android.widget.Toast");
+				var main = plus.android.runtimeMainActivity();
+				Toast.makeText(main,"打开新的活动aaaaaaaaaaaaaaaaaaaa",Toast.LENGTH_LONG).show();
+				main.unregisterReceiver(myBroad);//取消监听 取消后就代表只能监听一次
+			}
+		});
+		var IntentFilter = plus.android.importClass('android.content.IntentFilter');
+		var filter = new IntentFilter();
+		filter.addAction("net.deniro.android.MY_HTML_BROADCAST");
+		main.registerReceiver(myBroad, filter);
+   }
+   
+	Button broadHtmlButton = findViewById(R.id.button5);
+	broadHtmlButton.setOnClickListener(new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			//Toast.makeText(Main2Activity.this, "aaaa！", Toast.LENGTH_SHORT).show();
+			Intent intent = new Intent("net.deniro.android.MY_HTML_BROADCAST");
+			//intent.setComponent(new ComponentName(getPackageName(),"com.example.BroadcastReceiver.HtmlBroadReceiver")); 静态注册的广播需要这行代码
+			sendBroadcast(intent);
+		}
+	});
+   
+   
+Native.js动态注册自定义广播，原生Activity发送广播  
+	function onListenMyBroadcast(){
+            var main = plus.android.runtimeMainActivity();
+            var HtmlBroadReceiver = plus.android.importClass('com.example.BroadcastReceiver.HtmlBroadReceiver');
+            var IntentFilter = plus.android.importClass('android.content.IntentFilter');//引入过滤器
+            var filter = new IntentFilter();
+            filter.addAction("net.deniro.android.MY_HTML_BROADCAST_AA"); //监听扫码广播
+            main.registerReceiver(new HtmlBroadReceiver(), filter); //注册监听
+			//前端销毁时应该把广播也销毁掉unregisterReceiver
+	}
+
+	Button broadHtmlButton = findViewById(R.id.button5);
+        broadHtmlButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(Main2Activity.this, "aaaa！", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent("net.deniro.android.MY_HTML_BROADCAST_AA");
+                //intent.setComponent(new ComponentName(getPackageName(),"com.example.BroadcastReceiver.HtmlBroadReceiver"));
+                sendBroadcast(intent);
+//                finish();
+            }
+        });
+
+
+	public class HtmlBroadReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Toast.makeText( context, "这是自定义的广播-01!", Toast.LENGTH_LONG).show();
+		}
+	}
+
+
+Native.js 打开服务和关闭service
+
+<div onclick="pluginOpenGps()">打开GPS服务</div>
+<br/>
+<br/>
+<div onclick="pluginCloseGps()">销毁GPS服务</div>
+
+mui.plusReady(function(){});
+
+function pluginOpenGps(){
+	var Intent = plus.android.importClass("android.content.Intent");
+	var locationService = plus.android.importClass("com.taijue.patrol.service.LocationService");
+	var main = plus.android.runtimeMainActivity();
+
+	var intentInstance = new Intent(main, locationService.class);
+	main.startService(intentInstance);
+}
+
+function pluginCloseGps(){
+	var Intent = plus.android.importClass("android.content.Intent");
+	var locationService = plus.android.importClass("com.taijue.patrol.service.LocationService");
+	var main = plus.android.runtimeMainActivity();
+
+	var intentInstance = new Intent(main, locationService.class);
+	main.stopService(intentInstance);
+}
+
+//服务器类
+package com.taijue.patrol.service;
+
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
+
+import com.taijue.base.common.util.MyAppUtils;
+public class LocationService extends Service {
+    public LocationService() {
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        // TODO: Return the communication channel to the service.
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        MyAppUtils.toast("服务创建了");
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        MyAppUtils.toast("服务启动了");
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        MyAppUtils.toast("服务销毁了");
+    }
+}
+
+
+Native.js 拍照 压缩后展示图片  （如果html页面是远程访问的则无法显示img图片）
+<body>
+		<div class="bbb" style="border: 1px solid red; height: 100%;">
+			任务列表
+			<br/>
+			<br/>
+			<br/>
+			<br/>
+			<br/>
+			<button type="button" class="mui-btn">默认</button>
+			<img id="clipimg" style="margin:auto;width:300px;height: 300px;"/>
+		</div>
+		<script src="../../../../system/vendor.js"></script>
+		<script>
+			mui.plusReady(function() {
+				plus.io.resolveLocalFileSystemURL('_doc', function(entry){
+					entry.getDirectory('camera', {create:true}, function(dir){
+					}, function(e){
+						alert('Get directory "camera" failed: '+e.message);
+					} );
+				}, function(e){
+					alert('Resolve "_doc/" failed: '+e.message);
+					
+				});
+				mui(".bbb").on('tap','.mui-btn',function(){
+					var cmr = plus.camera.getCamera();
+					var res = cmr.supportedImageResolutions[0];
+					var fmt = cmr.supportedImageFormats[0];
+					cmr.captureImage( function( path ){
+							// alert( "Capture image success: " + path );  
+							var fileName = path.substring(path.lastIndexOf("/")+1, path.length);
+							// alert(fileName);
+							plus.zip.compressImage({
+								src:path,
+								dst:path,
+								overwrite:true,
+								quality:20
+							},
+							function(event) {
+								alert(event.target);
+								clipimg.src = event.target;
+							},function(error) {
+								alert("Compress error!");
+						});
+						},
+						function( error ) {
+							alert( "Capture image failed: " + error.message );
+						},
+						{filename:'_doc/camera/',resolution:res,format:fmt}
+					);
+				})
+			})
+		</script>
+	</body>
+
+
+Native.js 压缩文件
+mui.plusReady(function() {
+	var zipfile = "_doc/dir";
+	var targetPath = '_doc/camera/';
+	plus.zip.compress(targetPath,zipfile,
+		function() {
+			alert("Compress success!");
+		},function(error) {
+			alert("Compress error!");
+	});
+})
+
+   
+   
+Native.js 上传附件至远程服务器   
+   <body>
+		<div class="bbb" style="border: 1px solid red; height: 100%;">
+			任务列表
+			<br/>
+			<br/>
+			<br/>
+			<br/>
+			<br/>
+			<button type="button" class="mui-btn">默认</button>
+			<img id="clipimg" style="margin:auto;width:300px;height: 300px;"/>
+		</div>
+		<script src="../../../../system/vendor.js"></script>
+		<script>
+			mui.plusReady(function() {
+				plus.io.resolveLocalFileSystemURL('_doc', function(entry){
+					entry.getDirectory('camera', {create:true}, function(dir){
+					}, function(e){
+						alert('Get directory "camera" failed: '+e.message);
+					} );
+				}, function(e){
+					alert('Resolve "_doc/" failed: '+e.message);
+					
+				});
+				mui(".bbb").on('tap','.mui-btn',function(){
+					var cmr = plus.camera.getCamera();
+					var res = cmr.supportedImageResolutions[0];
+					var fmt = cmr.supportedImageFormats[0];
+					cmr.captureImage( function( path ){
+							// alert( "Capture image success: " + path );  
+							var fileName = path.substring(path.lastIndexOf("/")+1, path.length);
+							// alert(fileName);
+							plus.zip.compressImage({
+								src:path,
+								dst:path,
+								overwrite:true,
+								quality:20
+							},
+							function(event) {
+								alert(event.target);
+								clipimg.src = event.target;
+								
+								var task = plus.uploader.createUpload( "http://192.168.1.93:8082/gas3/patrol/bug/picture", 
+								{ method:"POST",blocksize: 204800,priority: 100}, 
+								function ( t, status ) {
+									// 上传完成
+									if ( status == 200 ) {
+										alert( "Upload success: " + t.url );
+									} else {
+										alert( "Upload failed: " + status );
+									}
+								});
+								task.addFile( event.target, {key:"file"} );
+								task.addData( "pics", "1001" );
+								task.setRequestHeader('token','test_123');
+								//task.addEventListener( "statechanged", onStateChanged, false );
+								task.start();
+								
+							},function(error) {
+								alert("Compress error!");
+						});
+						},
+						function( error ) {
+							alert( "Capture image failed: " + error.message );
+						},
+						{filename:'_doc/camera/',resolution:res,format:fmt}
+					);
+				})
+			})
+		</script>
+	</body>
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
