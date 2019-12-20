@@ -1,4 +1,5 @@
 /* @flow */
+// 链接：https://github.com/vuejs/vue/blob/dev/src/core/vdom/vnode.js
 
 export default class VNode {
   tag: string | void;
