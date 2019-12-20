@@ -3,13 +3,13 @@
 
 export default class VNode {
   tag: string | void;
-  data: VNodeData | void;
+  data: VNodeData | void; // data对象包含 {directives: [指令对象(name、rawName、expression、value、modifiers、def)], key:'h3_node', staticStyle: {color: 'red'}, normalizedStyle: {}}
   children: ?Array<VNode>;
   text: string | void;
-  elm: Node | void;
+  elm: Node | void; // 指令所在的节点实例 <h3 style="color: red;">E 结点hello E</h3>
   ns: string | void;
-  context: Component | void; // rendered in this component's scope
-  key: string | number | void;
+  context: Component | void; // rendered in this component's scope  所在组件实例
+  key: string | number | void;	// 节点的key属性的值 <h3 key="h3_node" key="h3_node" style="color:red;" v-focus="c => getName('childrenE', c)">E 结点{{message}}</h3>
   componentOptions: VNodeComponentOptions | void;
   componentInstance: Component | void; // component instance
   parent: VNode | void; // component placeholder node
