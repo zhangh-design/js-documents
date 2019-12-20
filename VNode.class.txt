@@ -8,7 +8,7 @@ export default class VNode {
   text: string | void;
   elm: Node | void; // 指令所在的 节点/组件 实例 <h3 style="color: red;">E 结点hello E</h3>
   ns: string | void;
-  context: Component | void; // rendered in this component's scope  所在组件实例，并不是指组件自己而是值组件所在的父组件实例
+  context: Component | void; // rendered in this component's scope  所在组件实例，并不是指组件自己而是指该组件注册时所在的组件实例（通常就是父组件）
   key: string | number | void;	// 节点/组件 的key属性的值 <h3 key="h3_node" key="h3_node" style="color:red;" v-focus="c => getName('childrenE', c)">E 结点{{message}}</h3>
   componentOptions: VNodeComponentOptions | void; // Ctor: ƒ VueComponent(options)、propsData、listeners、tag: "组件名称"、children
   componentInstance: Component | void; // component instance  自定义组件实例（在使用指令时发现 h3 等原生标签则使用例如指令的bind钩子函数中的 el 指令所绑定的元素实例代替， componentInstance 属性是undefined）
