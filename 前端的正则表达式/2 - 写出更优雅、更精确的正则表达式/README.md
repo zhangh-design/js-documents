@@ -177,6 +177,12 @@ containsWhitespace('Lorem_ipsum'); // false
 /dog$/.test('cat and dog'); // true
 ```
 
+```
+const expression = /^([0-9]+)*$/;
+expression.test('123456789!'); // false
+expression.test('123456789'); // true
+```
+
 ##### 3. 结合两个标志
 如果你的模式以 ^ 开头，并以 $ 结尾，则仅当测试的字符串整体匹配时，它才会匹配：
 
