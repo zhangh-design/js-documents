@@ -1,4 +1,11 @@
 
+目录 | 说明
+---|---
+1 | 基本概念
+2 | 写出更优雅、更精确的正则表达式
+3 | 使用 ES6 特性
+4 | 避免灾难性回溯
+
 ```
 [ ] 这个模式用来匹配一个字符，该字符可能是括号中的任何字符。
 
@@ -36,9 +43,31 @@ g：全局匹配 （多亏了这个标志，所有匹配项都能够被找到。
 \w | 匹配非特殊字符，即a-z、A-Z、0-9、_、汉字（汉字要视操作系统）
 \W | 匹配特殊字符，即非字母、非数字、非汉字、非_
 
-目录 | 说明
----|---
-1 | 基本概念
-2 | 写出更优雅、更精确的正则表达式
-3 | 使用 ES6 特性
-4 | 避免灾难性回溯
+
+// 前瞻：
+exp1(?=exp2) 查找exp2前面的exp1
+// 后顾：
+(?<=exp2)exp1 查找exp2后面的exp1
+// 负前瞻：
+exp1(?!exp2) 查找后面不是exp2的exp1
+// 负后顾：
+(?<!exp2)exp1 查找前面不是exp2的exp1
+
+它声明 x 仅会在其后跟随 y 时才匹配。
+```
+const expression = /x(?=y)/;
+
+expression.test('x'); // false
+expression.test('xy'); // true
+expression.test('bbbxy'); // true
+```
+
+当 x 后面不跟随 y 时，用负向先行断言匹配 x
+```
+const expression = /x(?!y)/;
+
+expression.test('x'); // true
+expression.test('xy'); // false
+```
+
+
