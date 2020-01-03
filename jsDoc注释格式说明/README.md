@@ -74,10 +74,11 @@ const apiDefaultConfig = {}
   * @desc 接口函数说明
   * @param {string} key - 参数说明
   * @param {object} [defaultValue=null] - 参数说明
+	* @param {string|string[]} [somebody=John Doe] - 参数说明 （一个参数可以接受多种类型）
   * @example
   * 示例
   */
-getValue (key = '', defaultValue = null) {}
+getValue (key = '', defaultValue = null, somebody) {}
 ```
 
 #### 可变参函数
