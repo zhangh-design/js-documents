@@ -5,6 +5,8 @@ https://blog.csdn.net/weixin_33991727/article/details/89572268
 	
 http://www.ayqy.net/blog/jsdoc%E6%94%AF%E6%8C%81_typescript%E7%AC%94%E8%AE%B019/
 
+http://www.jsphp.net/js/show-9-26-1.html （基于jsdoc的最优美的Javascript代码注释规范 js注释规范示例）
+
 `jsDoc`注释语法结合 `jsconfig.json` 配置文件在项目中以静态方式验证代码适用于`.js`文件（主要是用于.js的插件开发），主要是为了使用`jsDoc`后期通过`jsdoc`的命令来生成说明文档用的（注释即文档这样插件写完了文档也就出来了），如果说是用于代码静态检测那么我觉得 `Flow` 可能会更加合适。
 
 #### 类注释
