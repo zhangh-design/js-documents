@@ -93,14 +93,14 @@ console.info(Person.prototype);
 ```
 输出构造函数的原型对象并没有实例对象上的`name`和`age`属性，其中就有`constructor`：
 
-![image](https://raw.githubusercontent.com/zhangh-design/js-documents/master/%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83%E5%8F%8A%E4%BD%9C%E7%94%A8%E5%9F%9F/1.png)
+![image](http://i2.tiimg.com/717460/f680a2410ec28286.png)
 
 ```
 console.info(obj);
 ```
 输出实例属性和原型对象都有：
 
-![image](https://raw.githubusercontent.com/zhangh-design/js-documents/master/%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83%E5%8F%8A%E4%BD%9C%E7%94%A8%E5%9F%9F/2.png)
+![image](http://i2.tiimg.com/717460/7ed09fc1c14ceff9.png)
 
 ```
 console.info(obj.constructor);
@@ -126,7 +126,7 @@ console.info(obj.prototype);
 ```
 console.info(obj.__proto__);
 ```
-![image](https://raw.githubusercontent.com/zhangh-design/js-documents/master/%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83%E5%8F%8A%E4%BD%9C%E7%94%A8%E5%9F%9F/1.png)
+![image](http://i2.tiimg.com/717460/f680a2410ec28286.png)
 
 ```
 Person.prototype.constructor
@@ -199,7 +199,7 @@ console.info(obj.constructor == Object);
 普通函数：
 > {}
 
-![image](https://raw.githubusercontent.com/zhangh-design/js-documents/master/%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83%E5%8F%8A%E4%BD%9C%E7%94%A8%E5%9F%9F/3.png)
+![image](http://i2.tiimg.com/717460/0869266af1bc24f4.png)
 
 > 示例一：
 
@@ -265,7 +265,7 @@ console.info(P === Person);// true
 1. `__proto__`和`constructor`属性是对象所独有的。
 2. `prototype`属性是函数所独有的。
 
-![image](https://raw.githubusercontent.com/zhangh-design/js-documents/master/%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83%E5%8F%8A%E4%BD%9C%E7%94%A8%E5%9F%9F/4.png)
+![image](http://i2.tiimg.com/717460/eaf6974cad33bd1a.png)
 
 ```
 console.info(Person.constructor); //ƒ () { [native code] }
@@ -276,16 +276,16 @@ console.info(Person.__proto__);   //ƒ () { [native code] }
 console.info(obj.__proto__);
 console.info(Person.prototype);
 ```
-![image](https://raw.githubusercontent.com/zhangh-design/js-documents/master/%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83%E5%8F%8A%E4%BD%9C%E7%94%A8%E5%9F%9F/5.png)
+![image](http://i2.tiimg.com/717460/c55d23edf7ae2d04.png)
 
 注意点：
 
 这里我们仅留下 `__proto__` 属性，它是对象所独有的，可以看到`__proto__`属性都是由一个对象指向一个对象，即指向它们的原型对象（也可以理解为父对象），那么这个属性的作用是什么呢？它的作用就是当访问一个对象的属性时，如果该对象内部不存在这个属性，那么就会去它的`__proto__`属性所指向的那个对象（可以理解为父对象）里找，如果父对象也不存在这个属性，则继续往父对象的`__proto__`属性所指向的那个对象（可以理解为爷爷对象）里找，如果还没找到，则继续往上找。
 
 
-![image](https://raw.githubusercontent.com/zhangh-design/js-documents/master/%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83%E5%8F%8A%E4%BD%9C%E7%94%A8%E5%9F%9F/6.png)
+![image](http://i2.tiimg.com/717460/aaa98b4dc33c6e76.png)
 
-![image](https://raw.githubusercontent.com/zhangh-design/js-documents/master/%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83%E5%8F%8A%E4%BD%9C%E7%94%A8%E5%9F%9F/7.png)
+![image](http://i2.tiimg.com/717460/8e0fe300f90d3bb3.png)
 
 > 示例分析1：
 
@@ -309,7 +309,7 @@ Function.prototype.method = function (name, fn) {
 
 2：那正常我们自己创建的函数例如：`var b = function(){var name='小米';}` 那它的构造函数输出`（console.info(new b().constructor)）`应该是函数本身 `ƒ (){var name='小米';}`。
 
-![image](https://raw.githubusercontent.com/zhangh-design/js-documents/master/%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83%E5%8F%8A%E4%BD%9C%E7%94%A8%E5%9F%9F/8.png)
+![image](http://i2.tiimg.com/717460/cf2a41c6f3d320d5.png)
 
 ```
 Promise.prototype.finally = function (callback){

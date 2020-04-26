@@ -1,6 +1,6 @@
 ## 避免灾难性回溯
 
-![image](https://github.com/zhangh-design/js-documents/raw/master/%E5%89%8D%E7%AB%AF%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/4%20-%20%E9%81%BF%E5%85%8D%E7%81%BE%E9%9A%BE%E6%80%A7%E5%9B%9E%E6%BA%AF/1.jpg)
+![image](http://i2.tiimg.com/717460/c5d36ca9095453aa.jpg)
 
 > 前言：正则表达式可以解决许多问题，但也有可能是使我们头痛的根源。在本文中，我们将会学习需要注意的情况，例如灾难性的回溯。为了帮助我们理解问题，还分析了贪婪和懒惰量词以及为什么 lookahead 可能会有所帮助。
 

@@ -1,6 +1,6 @@
 ## 基本概念
 
-![image](http://m.qpic.cn/psc?/V12UXEll2JjLTU/S1G4*2hi*D5aPIJug2nMa46eV9hwJnuM2RkChpZxfxD5zrxMjfoedgz*K1lmXmyCvgMDokThwOeB.vpQALxy8imIZAsN2VrlmYHLjegxrUw!/b&bo=kAE.AQAAAAARB54!&rf=viewer_4&t=5)
+![image](http://i2.tiimg.com/717460/6b7731294aca4084.jpg)
 
 
 > #### 创建正则表达式的方法
