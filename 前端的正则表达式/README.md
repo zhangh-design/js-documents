@@ -70,4 +70,15 @@ expression.test('x'); // true
 expression.test('xy'); // false
 ```
 
+不包含某个字符串：
 
+```
+function hasQuestionMarkBeforeEnd(string) {
+  				return /^((?!badword).*)\.(png|jpe?g|gif|svg|blob)(\?.*)?$/.test(string);
+			}
+
+			var b = hasQuestionMarkBeforeEnd('ba3432.png'); // true
+      // var b = hasQuestionMarkBeforeEnd('badword.png'); // false
+      // var b = hasQuestionMarkBeforeEnd('badword-23123.png'); // false
+			console.info(b);
+```
