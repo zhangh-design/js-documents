@@ -179,7 +179,7 @@ if、else、catch、finally、while等关键字前；
 
 也可使用数组来进行拼接，相对+运算更容易调整缩进：
 
-![image](./02/png)
+![image](./02.png)
 
 - 过长的逻辑条件组合
 
