@@ -303,6 +303,17 @@ HTML 结构来解决一些视觉设计问题， 不要将 img 元素当做专门
 
 ##### 5.1 id 和 class 的命名
 
+遵循 BEM 规则， BEM 是块（ block）、元素（element）、修饰符（ modifier）的缩写，利用不同的区块，功能以及样式来给元素命名， 这三个部分使用 __ 与 -- 连接。 
+
+Block 命名可使用单词之间的组合，使用 – 连接，建议不超过两个单词。 命名约定的模式如下：
+
+![image](./14.jpg)
+
+- block 代表了更高级别的抽象或组件
+- block__element 代表 block 的后代，用于形成一个完整的 block 的整体
+- block--modifier 代表 block 的不同状态或不同版本
+
+
 
 #### 6. JavaScript 规范
 
