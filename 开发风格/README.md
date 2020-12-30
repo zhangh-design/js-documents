@@ -358,7 +358,133 @@ Block 命名可使用单词之间的组合，使用 – 连接，建议不超过
 
 - 目录下的默认文件为 index，比如：index.js、index.vue
 
+[->Vue 风格指南](https://cn.vuejs.org/v2/style-guide/)
 
+##### 10.1 模板代码书写格式：
+
+规则：相对少的配置项尽量往前靠。
+
+```
+export default {
+  name: '', // 非必须，如果是全局组件则一定要提供 name 参数
+  inheritAttrs: false,
+  provide() {
+    return {
+      getComponent: this
+    };
+  },
+  components: {}, // 组件注册
+  props: {},
+  data(){
+      return {}
+  },
+  computed(){},
+  watch: {},
+  created(){},
+  mounted(){},
+  methods: {}
+}
+```
+
+##### 10.2 公用组件
+
+- 使用大驼峰命名法， 组件名应该始终是多个单词的，根组件 App 除外。
+- 单文件组件的文件名应该要么始终是单词大写开头 (PascalCase)，要么始终是横线连接
+(kebab-case)。对于绝大多数项目来说，在单文件组件和字符串模板中组件名应该总是
+PascalCase 的——但是在 DOM 模板中总是 kebab-case 的。
+
+```
+Vue.component('MyComponentName', { /* ... */ })
+
+export default {
+  name: 'TodoItem',
+  // ...
+}
+```
+
+- 应用特定样式和约定的基础组件 (也就是展示类的、无逻辑的或无状态的组件) 应该全
+部以一个特定的前缀开头，比如 Base、 App 或 V。
+
+- 只应该拥有单个活跃实例的组件应该以 The 前缀命名，以示其唯一性。
+
+```
+// 反例
+components/
+|- Heading.vue
+|- MySidebar.vue
+
+// 好例子
+components/
+|- TheHeading.vue
+|- TheSidebar.vue
+```
+
+- 和父组件紧密耦合的子组件应该以父组件名作为前缀命名。
+
+```
+反例
+
+components/
+|- TodoList.vue
+|- TodoItem.vue
+|- TodoButton.vue
+
+components/
+|- SearchSidebar.vue
+|- NavigationForSearchSidebar.vue
+
+好例子
+
+components/
+|- TodoList.vue
+|- TodoListItem.vue
+|- TodoListItemButton.vue
+
+components/
+|- SearchSidebar.vue
+|- SearchSidebarNavigation.vue
+
+```
+
+- 组件名应该以高级别的 (通常是一般化描述的) 单词开头，以描述性的修饰词结尾。
+
+
+##### 10.3 路由
+
+- 路由结构严格依照 page 目录结构
+- 为每个路由添加相应 title
+- 路由 path 使用小写字母，建议每一级不超过一个单词，若超过则使用 kebab-case 方式
+
+##### 10.4 默认首文件
+
+- 目录下的默认文件为 index，比如：index.js、index.vue
+
+##### 10.5 for 循环 key 的使用
+
+- 如果循环的组件只是用于展示则 key 可以使用 index 下标，或者不添加 key 属性。
+- 如果循环的组件会进行增加、删除、修改操作，则 key 必填并且不能使用 index 下标，需要使用唯一值，比如：id。
+
+##### 10.6 事件命名
+
+1. 回调事件函数中的`event`参数不要简写成`e`
+
+```
+// 不好的写法
+onClick(e){}
+
+// 好的写法
+onClick(event){}
+```
+
+2. 回调事件命名建议以`on`开头
+
+```
+// 不好的写法
+doClick(event){}
+
+// 好的写法
+onClick(event){}
+```
 
 
 
