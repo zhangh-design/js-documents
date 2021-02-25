@@ -82,3 +82,20 @@ function hasQuestionMarkBeforeEnd(string) {
       // var b = hasQuestionMarkBeforeEnd('badword-23123.png'); // false
 			console.info(b);
 ```
+
+正则表达式不包含某个字符串写法
+
+因在程序中需要做城市间跳转，但是页面中包含的css、scripts和图片等路径是要排除在外的。这就需要在正则中指定当遇到哪些
+
+字符时需要略过。
+
+正则如下：
+
+```
+/((?!css)(?!scripts)(?!images)[a-zA-Z]+)/ 
+```
+
+指定当路径中包含 css scripts 和 images 是不需要跳转的。
+
+
+
